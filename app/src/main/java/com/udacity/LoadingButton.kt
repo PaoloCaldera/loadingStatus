@@ -2,6 +2,7 @@ package com.udacity
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -39,7 +40,8 @@ class LoadingButton @JvmOverloads constructor(
     private var loadingAngle: Float = 90F
 
     // Animator object
-    private val valueAnimator = ValueAnimator()
+    private var widthAnimator = ValueAnimator()
+    private var circleAnimator = ValueAnimator()
 
     // Paint object with which drawing shapes
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -52,18 +54,27 @@ class LoadingButton @JvmOverloads constructor(
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
         when (new) {
             ButtonState.Clicked -> {
-                valueAnimator.apply {
+                widthAnimator.apply {
                     setFloatValues(0F, width.toFloat())
                     duration = 1000
-                }
-                buttonState = ButtonState.Loading
-            }
-            ButtonState.Loading -> {
-                valueAnimator.apply {
                     addUpdateListener {
                         loadingWidth = it.animatedValue as Float
                         invalidate()
                     }
+                }
+                circleAnimator.apply {
+                    setFloatValues(0F, 360F)
+                    duration = 1000
+                    addUpdateListener {
+                        loadingAngle = it.animatedValue as Float
+                        invalidate()
+                    }
+                }
+                buttonState = ButtonState.Loading
+            }
+            ButtonState.Loading -> {
+                AnimatorSet().apply {
+                    playTogether(widthAnimator, circleAnimator)
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(p0: Animator?) {
                             buttonState = ButtonState.Completed
@@ -74,6 +85,7 @@ class LoadingButton @JvmOverloads constructor(
             }
             ButtonState.Completed -> {
                 loadingWidth = 0F
+                loadingAngle = 0F
                 invalidate()
             }
         }
@@ -120,8 +132,11 @@ class LoadingButton @JvmOverloads constructor(
 
                 // Loading circle
                 paint.color = resources.getColor(R.color.colorAccent)
-                canvas.drawCircle(width.toFloat() * 3/4, height.toFloat() / 2,
-                circleRadius, paint)
+                canvas.drawArc((width * 3/4) - circleRadius,
+                    (height / 2) - circleRadius,
+                    (width * 3/4) + circleRadius,
+                    (height / 2) + circleRadius,
+                    0F, loadingAngle, true, paint)
             }
             else -> {
                 paint.color = resources.getColor(R.color.colorPrimary)
