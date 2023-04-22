@@ -19,6 +19,7 @@ import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.getSystemService
+import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
@@ -29,26 +30,16 @@ class LoadingButton @JvmOverloads constructor(
     private var widthSize = 0
     private var heightSize = 0
 
-    // TO BE REMOVED: text size of the custom button
-    private val textButtonSize: Float = 48F
-
     // Radius of the circle appearing during loading
     private var circleRadius: Float = 0F
 
     // Variables for loading
     private var loadingWidth: Float = 0F
-    private var loadingAngle: Float = 90F
+    private var loadingAngle: Float = 0F
 
     // Animator object
     private var widthAnimator = ValueAnimator()
     private var circleAnimator = ValueAnimator()
-
-    // Paint object with which drawing shapes
-    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        style = Paint.Style.FILL
-        textAlign = Paint.Align.CENTER
-        textSize = textButtonSize
-    }
 
     // Button state observable
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
@@ -91,10 +82,29 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
+    // Attribute that are specified in the layout
+    private var textSize: Float = 0F
+    private var baseText: String = ""
+    private var loadingText: String = ""
+    private var baseColor = 0
+    private var loadingColor = 0
+    private var highlightColor = 0
+    private var textColor = 0
+
     init {
         isClickable = true
-    }
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
 
+        textSize = typedArray.getDimension(R.styleable.LoadingButton_android_textSize, 48F)
+        baseText = typedArray.getString(R.styleable.LoadingButton_baseText).toString()
+        loadingText = typedArray.getString(R.styleable.LoadingButton_loadingText).toString()
+        baseColor = typedArray.getColor(R.styleable.LoadingButton_baseColor, 0)
+        loadingColor = typedArray.getColor(R.styleable.LoadingButton_loadingColor, 0)
+        highlightColor = typedArray.getColor(R.styleable.LoadingButton_highlightColor, 0)
+        textColor = typedArray.getColor(R.styleable.LoadingButton_textColor, 0)
+
+        typedArray.recycle()
+    }
 
     /**
      * Called everytime the view size changes
@@ -105,6 +115,12 @@ class LoadingButton @JvmOverloads constructor(
         heightSize = h
     }
 
+    // Paint object with which drawing shapes
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.FILL
+        textAlign = Paint.Align.CENTER
+        textSize = this@LoadingButton.textSize
+    }
 
     /**
      * Draws the view from scratch
@@ -116,22 +132,22 @@ class LoadingButton @JvmOverloads constructor(
         when (buttonState) {
             ButtonState.Loading -> {
                 // Base rectangle
-                paint.color = resources.getColor(R.color.colorPrimary)
+                paint.color = baseColor
                 canvas.drawRect(
-                    0F, 0F, widthSize.toFloat(), heightSize.toFloat(), paint
+                    0F, 0F, width.toFloat(), height.toFloat(), paint
                 )
 
                 // Loading rectangle
-                paint.color = resources.getColor(R.color.colorPrimaryDark)
+                paint.color = loadingColor
                 canvas.drawRect(0F, 0F, loadingWidth, heightSize.toFloat(), paint)
 
                 // Loading text
-                paint.color = resources.getColor(R.color.white)
-                canvas.drawText(resources.getString(R.string.button_loading), (widthSize / 2).toFloat(),
-                    (heightSize / 2).toFloat() + (textButtonSize / 2), paint)
+                paint.color = textColor
+                canvas.drawText(loadingText, (width/2).toFloat(),
+                    (height/2).toFloat() + (textSize / 2), paint)
 
                 // Loading circle
-                paint.color = resources.getColor(R.color.colorAccent)
+                paint.color = highlightColor
                 canvas.drawArc((width * 3/4) - circleRadius,
                     (height / 2) - circleRadius,
                     (width * 3/4) + circleRadius,
@@ -139,13 +155,13 @@ class LoadingButton @JvmOverloads constructor(
                     0F, loadingAngle, true, paint)
             }
             else -> {
-                paint.color = resources.getColor(R.color.colorPrimary)
+                paint.color = baseColor
                 canvas.drawRect(
-                    0F, 0F, widthSize.toFloat(), heightSize.toFloat(), paint
+                    0F, 0F, width.toFloat(), height.toFloat(), paint
                 )
-                paint.color = resources.getColor(R.color.white)
-                canvas.drawText(resources.getString(R.string.button_name), (widthSize / 2).toFloat(),
-                    (heightSize / 2).toFloat() + (textButtonSize / 2), paint)
+                paint.color = textColor
+                canvas.drawText(baseText, (width / 2).toFloat(),
+                    (height / 2).toFloat() + (textSize / 2), paint)
             }
         }
     }

@@ -55,10 +55,17 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_margin="20dp"
+        android:textSize="20sp"
+        app:baseColor="@color/colorPrimary"
+        app:baseText="@string/button_name"
+        app:highlightColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/download_options_radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/download_options_radioGroup"
+        app:loadingColor="@color/colorPrimaryDark"
+        app:loadingText="@string/button_loading"
+        app:textColor="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
