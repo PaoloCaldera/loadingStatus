@@ -173,6 +173,7 @@ class LoadingButton @JvmOverloads constructor(
     @SuppressLint("ClickableViewAccessibility")
     override fun performClick(): Boolean {
         buttonState = ButtonState.Clicked
+        callOnClick()
         return true
     }
 
