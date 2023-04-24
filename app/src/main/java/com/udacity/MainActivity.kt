@@ -1,6 +1,8 @@
 package com.udacity
 
 import android.app.DownloadManager
+import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
@@ -8,12 +10,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -33,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var customButton: LoadingButton
 
     private var url = URL
+    private var projectSelected: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,13 +52,22 @@ class MainActivity : AppCompatActivity() {
 
         glideRadioButton.setOnClickListener {
             url = getString(R.string.url_glide)
+            projectSelected = getString(R.string.radio_glide).substringBefore(" -")
         }
         loadAppRadioButton.setOnClickListener {
             url = getString(R.string.url_loadapp)
+            projectSelected = getString(R.string.radio_loadapp).substringBefore(" -")
         }
         retrofitRadioButton.setOnClickListener {
             url = getString(R.string.url_retrofit)
+            projectSelected = getString(R.string.radio_retrofit).substringBefore(" -")
         }
+
+        notificationManager = ContextCompat.getSystemService(
+            applicationContext,
+            NotificationManager::class.java
+        ) as NotificationManager
+        notificationManager.createChannel()
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
@@ -70,6 +84,8 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
             customButton.downloading = false
+
+            notificationManager.sendNotification()
         }
     }
 
@@ -93,6 +109,32 @@ class MainActivity : AppCompatActivity() {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
+        private const val NOTIFICATION_ID = 0
     }
 
+    private fun NotificationManager.createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                CHANNEL_ID,
+                getString(R.string.notification_channel_name),
+                NotificationManager.IMPORTANCE_LOW
+            )
+            notificationChannel.apply {
+                enableLights(false)
+                enableVibration(false)
+                description = getString(R.string.notification_channel_description)
+            }
+
+            createNotificationChannel(notificationChannel)
+        }
+    }
+
+    private fun NotificationManager.sendNotification() {
+        val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_assistant_black_24dp)
+            .setContentTitle(getString(R.string.notification_title))
+            .setContentText(getString(R.string.notification_description, projectSelected))
+
+        notify(NOTIFICATION_ID, builder.build())
+    }
 }
