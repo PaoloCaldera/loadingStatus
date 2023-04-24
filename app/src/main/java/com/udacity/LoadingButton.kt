@@ -38,8 +38,12 @@ class LoadingButton @JvmOverloads constructor(
     private var loadingAngle: Float = 0F
 
     // Animator object
-    private var widthAnimator = ValueAnimator()
-    private var circleAnimator = ValueAnimator()
+    private val widthAnimator = ValueAnimator()
+    private val circleAnimator = ValueAnimator()
+    private val animatorSet = AnimatorSet()
+
+    // Downloading flag
+    var downloading = false
 
     // Button state observable
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
@@ -48,6 +52,8 @@ class LoadingButton @JvmOverloads constructor(
                 widthAnimator.apply {
                     setFloatValues(0F, width.toFloat())
                     duration = 1000
+                    repeatCount = ValueAnimator.INFINITE
+                    repeatMode = ValueAnimator.RESTART
                     addUpdateListener {
                         loadingWidth = it.animatedValue as Float
                         invalidate()
@@ -56,18 +62,22 @@ class LoadingButton @JvmOverloads constructor(
                 circleAnimator.apply {
                     setFloatValues(0F, 360F)
                     duration = 1000
+                    repeatCount = ValueAnimator.INFINITE
+                    repeatMode = ValueAnimator.RESTART
                     addUpdateListener {
                         loadingAngle = it.animatedValue as Float
                         invalidate()
+                        if (!downloading)
+                            animatorSet.cancel()
                     }
                 }
                 buttonState = ButtonState.Loading
             }
             ButtonState.Loading -> {
-                AnimatorSet().apply {
+                animatorSet.apply {
                     playTogether(widthAnimator, circleAnimator)
                     addListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(p0: Animator?) {
+                        override fun onAnimationCancel(animation: Animator?) {
                             buttonState = ButtonState.Completed
                         }
                     })
@@ -172,8 +182,8 @@ class LoadingButton @JvmOverloads constructor(
      */
     @SuppressLint("ClickableViewAccessibility")
     override fun performClick(): Boolean {
-        buttonState = ButtonState.Clicked
         callOnClick()
+        buttonState = ButtonState.Clicked
         return true
     }
 

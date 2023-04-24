@@ -61,13 +61,15 @@ class MainActivity : AppCompatActivity() {
             if (radioGroup.checkedRadioButtonId == -1)
                 Toast.makeText(this, getString(R.string.toast_message), Toast.LENGTH_SHORT).show()
             else
-                download(url)
+                download(URL)
         }
     }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+            customButton.downloading = false
         }
     }
 
@@ -83,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+
+        customButton.downloading = true
     }
 
     companion object {
