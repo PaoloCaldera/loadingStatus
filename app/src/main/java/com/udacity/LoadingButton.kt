@@ -57,6 +57,9 @@ class LoadingButton @JvmOverloads constructor(
                     addUpdateListener {
                         loadingWidth = it.animatedValue as Float
                         invalidate()
+                        if (!downloading) {
+                            animatorSet.cancel()
+                        }
                     }
                 }
                 circleAnimator.apply {
@@ -67,8 +70,6 @@ class LoadingButton @JvmOverloads constructor(
                     addUpdateListener {
                         loadingAngle = it.animatedValue as Float
                         invalidate()
-                        if (!downloading)
-                            animatorSet.cancel()
                     }
                 }
                 buttonState = ButtonState.Loading
@@ -78,6 +79,8 @@ class LoadingButton @JvmOverloads constructor(
                     playTogether(widthAnimator, circleAnimator)
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationCancel(animation: Animator?) {
+                            widthAnimator.removeAllListeners()
+                            circleAnimator.removeAllListeners()
                             buttonState = ButtonState.Completed
                         }
                     })
@@ -85,6 +88,7 @@ class LoadingButton @JvmOverloads constructor(
                 }
             }
             ButtonState.Completed -> {
+                animatorSet.removeAllListeners()
                 loadingWidth = 0F
                 loadingAngle = 0F
                 invalidate()
