@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var glideRadioButton: RadioButton
     private lateinit var loadAppRadioButton: RadioButton
     private lateinit var retrofitRadioButton: RadioButton
+    private lateinit var customButton: LoadingButton
 
     private var url = URL
 
@@ -42,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         glideRadioButton = findViewById(R.id.glide_radioButton)
         loadAppRadioButton = findViewById(R.id.loadapp_radioButton)
         retrofitRadioButton = findViewById(R.id.retrofit_radioButton)
+        customButton = findViewById(R.id.custom_button)
 
         glideRadioButton.setOnClickListener {
             url = getString(R.string.url_glide)
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity() {
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        custom_button.setOnClickListener {
+        customButton.setOnClickListener {
             if (radioGroup.checkedRadioButtonId == -1)
                 Toast.makeText(this, getString(R.string.toast_message), Toast.LENGTH_SHORT).show()
             else
@@ -66,6 +68,8 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+            customButton.downloading = false
         }
     }
 
@@ -81,6 +85,8 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+
+        customButton.downloading = true
     }
 
     companion object {
