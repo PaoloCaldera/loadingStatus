@@ -1,5 +1,6 @@
 package com.udacity
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.app.Notification
 import android.app.NotificationChannel
@@ -129,11 +130,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     private fun NotificationManager.sendNotification() {
+        // Explicit intent with the name of the activity to launch
+        val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+
+        // Pending intent containing the intent defined above and assigned to the notification
+        // Pending intent is needed cause the app must be launched by another app or the system
+        val contentPendingIntent = PendingIntent.getActivity(
+            applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_description, projectSelected))
+            .setContentIntent(contentPendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setAutoCancel(true)
+            .addAction(
+                R.drawable.ic_assistant_black_24dp,
+                getString(R.string.notification_button),
+                contentPendingIntent
+            )
 
         notify(NOTIFICATION_ID, builder.build())
     }
