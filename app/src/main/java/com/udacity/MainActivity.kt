@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private var url = URL
     private var projectSelected: String = ""
 
+    private var downloadStatus: DownloadStatus = DownloadStatus.SUCCESS
+
     private var currentNotificationId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,10 +88,17 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
 
+            downloadStatus =
+                if (id == downloadID) DownloadStatus.SUCCESS
+                else DownloadStatus.FAIL
+
+            // Set the flag for the custom view animation to interrupt
             customButton.downloading = false
 
+            // Increase the counter of the notificationID and send the notification
             currentNotificationId++
             notificationManager.sendNotification()
+
         }
     }
 
@@ -106,6 +115,7 @@ class MainActivity : AppCompatActivity() {
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
 
+        downloadStatus = DownloadStatus.PROGRESS
         customButton.downloading = true
     }
 
@@ -140,13 +150,16 @@ class MainActivity : AppCompatActivity() {
         // Explicit intent with the name of the activity to launch
         val contentIntent = Intent(applicationContext, DetailActivity::class.java)
         contentIntent.putExtra(EXTRA_PROJECT_SELECTED, projectSelected)
-        contentIntent.putExtra(EXTRA_STATUS, getString(R.string.success_status))
+        contentIntent.putExtra(EXTRA_STATUS, downloadStatus.label)
         contentIntent.putExtra(EXTRA_NOTIFICATION_ID, currentNotificationId)
 
         // Pending intent containing the intent defined above and assigned to the notification
         // Pending intent is needed cause the app must be launched by another app or the system
         pendingIntent = PendingIntent.getActivity(
-            applicationContext, currentNotificationId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            applicationContext,
+            currentNotificationId,
+            contentIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         action = NotificationCompat.Action(
