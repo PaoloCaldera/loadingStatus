@@ -137,22 +137,24 @@ class MainActivity : AppCompatActivity() {
 
         // Pending intent containing the intent defined above and assigned to the notification
         // Pending intent is needed cause the app must be launched by another app or the system
-        val contentPendingIntent = PendingIntent.getActivity(
+        pendingIntent = PendingIntent.getActivity(
             applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        action = NotificationCompat.Action(
+            R.drawable.ic_assistant_black_24dp,
+            getString(R.string.notification_button),
+            pendingIntent
         )
 
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentTitle(getString(R.string.notification_title))
             .setContentText(getString(R.string.notification_description, projectSelected))
-            .setContentIntent(contentPendingIntent)
+            .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
-            .addAction(
-                R.drawable.ic_assistant_black_24dp,
-                getString(R.string.notification_button),
-                contentPendingIntent
-            )
+            .addAction(action)
 
         notify(NOTIFICATION_ID, builder.build())
     }

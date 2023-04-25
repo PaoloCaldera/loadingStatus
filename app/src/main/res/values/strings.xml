@@ -13,7 +13,11 @@
 
     <string name="button_name">Download</string>
     <string name="button_loading">We are loading </string>
+
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="file_name_detail">File name:</string>
+    <string name="status_detail">Status:</string>
+    <string name="ok_button_name">Ok</string>
 
     <string name="radio_glide">Glide - Image Loading Library by BumpTech</string>
     <string name="radio_loadapp">LoadApp - Current repository by Udacity</string>
@@ -22,4 +26,8 @@
     <string name="url_glide">https://github.com/bumptech/glide/archive/refs/heads/master.zip</string>
     <string name="url_loadapp">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/refs/heads/master.zip</string>
     <string name="url_retrofit">https://github.com/square/retrofit/archive/refs/heads/master.zip</string>
+
+    <string name="success_status">Success</string>
+    <string name="fail_status">Fail</string>
+    <string name="progress_status">Progress</string>
 </resources>
