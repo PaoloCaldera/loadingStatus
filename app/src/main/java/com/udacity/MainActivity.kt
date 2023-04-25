@@ -40,6 +40,8 @@ class MainActivity : AppCompatActivity() {
     private var url = URL
     private var projectSelected: String = ""
 
+    private var currentNotificationId: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -53,15 +55,15 @@ class MainActivity : AppCompatActivity() {
 
         glideRadioButton.setOnClickListener {
             url = getString(R.string.url_glide)
-            projectSelected = getString(R.string.radio_glide).substringBefore(" -")
+            projectSelected = getString(R.string.radio_glide)
         }
         loadAppRadioButton.setOnClickListener {
             url = getString(R.string.url_loadapp)
-            projectSelected = getString(R.string.radio_loadapp).substringBefore(" -")
+            projectSelected = getString(R.string.radio_loadapp)
         }
         retrofitRadioButton.setOnClickListener {
             url = getString(R.string.url_retrofit)
-            projectSelected = getString(R.string.radio_retrofit).substringBefore(" -")
+            projectSelected = getString(R.string.radio_retrofit)
         }
 
         notificationManager = ContextCompat.getSystemService(
@@ -76,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             if (radioGroup.checkedRadioButtonId == -1)
                 Toast.makeText(this, getString(R.string.toast_message), Toast.LENGTH_SHORT).show()
             else
-                download(url)
+                download(URL)
         }
     }
 
@@ -86,6 +88,7 @@ class MainActivity : AppCompatActivity() {
 
             customButton.downloading = false
 
+            currentNotificationId++
             notificationManager.sendNotification()
         }
     }
@@ -110,7 +113,9 @@ class MainActivity : AppCompatActivity() {
         private const val URL =
             "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
-        private const val NOTIFICATION_ID = 0
+        private const val EXTRA_PROJECT_SELECTED = "project_extra_string"
+        private const val EXTRA_STATUS = "status_extra_string"
+        private const val EXTRA_NOTIFICATION_ID = "notificationId_extra_int"
     }
 
     private fun NotificationManager.createChannel() {
@@ -134,11 +139,14 @@ class MainActivity : AppCompatActivity() {
     private fun NotificationManager.sendNotification() {
         // Explicit intent with the name of the activity to launch
         val contentIntent = Intent(applicationContext, DetailActivity::class.java)
+        contentIntent.putExtra(EXTRA_PROJECT_SELECTED, projectSelected)
+        contentIntent.putExtra(EXTRA_STATUS, getString(R.string.success_status))
+        contentIntent.putExtra(EXTRA_NOTIFICATION_ID, currentNotificationId)
 
         // Pending intent containing the intent defined above and assigned to the notification
         // Pending intent is needed cause the app must be launched by another app or the system
         pendingIntent = PendingIntent.getActivity(
-            applicationContext, NOTIFICATION_ID, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
+            applicationContext, currentNotificationId, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         action = NotificationCompat.Action(
@@ -150,12 +158,17 @@ class MainActivity : AppCompatActivity() {
         val builder = NotificationCompat.Builder(applicationContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentTitle(getString(R.string.notification_title))
-            .setContentText(getString(R.string.notification_description, projectSelected))
+            .setContentText(
+                getString(
+                    R.string.notification_description,
+                    projectSelected.substringBefore(" -")
+                )
+            )
             .setContentIntent(pendingIntent)
             .setPriority(NotificationCompat.PRIORITY_LOW)
             .setAutoCancel(true)
             .addAction(action)
 
-        notify(NOTIFICATION_ID, builder.build())
+        notify(currentNotificationId, builder.build())
     }
 }
