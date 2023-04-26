@@ -39,6 +39,8 @@ class LoadingButton @JvmOverloads constructor(
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
         when (new) {
             ButtonState.Clicked -> {
+
+                // Set the additional rectangle width animator
                 widthAnimator.apply {
                     setFloatValues(0F, width.toFloat())
                     duration = 1000
@@ -52,6 +54,8 @@ class LoadingButton @JvmOverloads constructor(
                         }
                     }
                 }
+
+                // Set the circle animator
                 circleAnimator.apply {
                     setFloatValues(0F, 360F)
                     duration = 1000
@@ -62,15 +66,22 @@ class LoadingButton @JvmOverloads constructor(
                         invalidate()
                     }
                 }
+
+                // Change the button state to activate the download animation
                 buttonState = ButtonState.Loading
             }
             ButtonState.Loading -> {
+                // Play animations together with the animator set
                 animatorSet.apply {
                     playTogether(widthAnimator, circleAnimator)
                     addListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationCancel(animation: Animator?) {
+
+                            // Remove all the animator listeners
                             widthAnimator.removeAllListeners()
                             circleAnimator.removeAllListeners()
+
+                            // Return to the default state of the button
                             buttonState = ButtonState.Completed
                         }
                     })
@@ -78,7 +89,10 @@ class LoadingButton @JvmOverloads constructor(
                 }
             }
             ButtonState.Completed -> {
+                // Remove the animator set listener
                 animatorSet.removeAllListeners()
+
+                // Put the animation shapes at their default value
                 loadingWidth = 0F
                 loadingAngle = 0F
                 invalidate()
@@ -97,8 +111,10 @@ class LoadingButton @JvmOverloads constructor(
 
     init {
         isClickable = true
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
 
+        // Get the attributes defined in the xml file
+        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.LoadingButton)
+        // Assign the attributes to the class values
         textSize = typedArray.getDimension(R.styleable.LoadingButton_android_textSize, 48F)
         baseText = typedArray.getString(R.styleable.LoadingButton_baseText).toString()
         loadingText = typedArray.getString(R.styleable.LoadingButton_loadingText).toString()
@@ -135,7 +151,7 @@ class LoadingButton @JvmOverloads constructor(
 
         when (buttonState) {
             ButtonState.Loading -> {
-                // Base rectangle
+                // Default rectangle
                 paint.color = baseColor
                 canvas.drawRect(
                     0F, 0F, width.toFloat(), height.toFloat(), paint
@@ -163,10 +179,13 @@ class LoadingButton @JvmOverloads constructor(
                 )
             }
             else -> {
+                // Default rectangle
                 paint.color = baseColor
                 canvas.drawRect(
                     0F, 0F, width.toFloat(), height.toFloat(), paint
                 )
+
+                // Default text
                 paint.color = textColor
                 canvas.drawText(
                     baseText, (width / 2).toFloat(),
