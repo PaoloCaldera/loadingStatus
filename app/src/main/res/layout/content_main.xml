@@ -23,39 +23,39 @@
             android:id="@+id/glide_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:paddingHorizontal="8dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/radio_glide"
-            android:textSize="20sp" />
+            android:textSize="@dimen/default_text_size" />
 
         <RadioButton
             android:id="@+id/loadapp_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:paddingHorizontal="8dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/radio_loadapp"
-            android:textSize="20sp" />
+            android:textSize="@dimen/default_text_size" />
 
         <RadioButton
             android:id="@+id/retrofit_radioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginVertical="8dp"
-            android:paddingHorizontal="8dp"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginVertical="@dimen/margin_small"
+            android:paddingHorizontal="@dimen/padding_small"
             android:text="@string/radio_retrofit"
-            android:textSize="20sp" />
+            android:textSize="@dimen/default_text_size" />
     </RadioGroup>
 
     <com.udacity.LoadingButton
         android:id="@+id/custom_button"
         android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:layout_margin="20dp"
-        android:textSize="20sp"
+        android:layout_height="@dimen/custom_button_height"
+        android:layout_margin="@dimen/custom_button_margin"
+        android:textSize="@dimen/default_text_size"
         app:baseColor="@color/colorPrimary"
         app:baseText="@string/button_name"
         app:highlightColor="@color/colorAccent"
