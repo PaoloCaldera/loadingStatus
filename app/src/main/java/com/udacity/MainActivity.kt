@@ -79,9 +79,6 @@ class MainActivity : AppCompatActivity() {
         ) as NotificationManager
         notificationManager.createChannel()
 
-        // Register the broadcast receiver for the download completion
-        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
         // Start the download when the custom button is clicked, or display a message on screen
         customButton.setOnClickListener {
             if (radioGroup.checkedRadioButtonId == -1)
@@ -89,6 +86,18 @@ class MainActivity : AppCompatActivity() {
             else
                 download(url)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Register the broadcast receiver for the download completion
+        registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+    }
+
+    override fun onStop() {
+        super.onStop()
+        // Unregister the broadcast receiver
+        unregisterReceiver(receiver)
     }
 
     /**
