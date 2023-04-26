@@ -41,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
 
         okButton.setOnClickListener {
             val intent = Intent(applicationContext, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             startActivity(intent)
         }
     }

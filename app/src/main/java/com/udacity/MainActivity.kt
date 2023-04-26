@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             if (radioGroup.checkedRadioButtonId == -1)
                 Toast.makeText(this, getString(R.string.toast_message), Toast.LENGTH_SHORT).show()
             else
-                download(URL)
+                download(url)
         }
     }
 
