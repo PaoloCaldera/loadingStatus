@@ -2,7 +2,6 @@ package com.udacity
 
 import android.annotation.SuppressLint
 import android.app.DownloadManager
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent

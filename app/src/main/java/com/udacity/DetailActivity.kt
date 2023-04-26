@@ -4,12 +4,10 @@ import android.app.NotificationManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.content_main.*
 
 class DetailActivity : AppCompatActivity() {
 

@@ -5,21 +5,11 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.DownloadManager
 import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.RectF
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.getSystemService
-import androidx.core.content.withStyledAttributes
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
