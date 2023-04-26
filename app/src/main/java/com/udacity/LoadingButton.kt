@@ -157,16 +157,20 @@ class LoadingButton @JvmOverloads constructor(
 
                 // Loading text
                 paint.color = textColor
-                canvas.drawText(loadingText, (width/2).toFloat(),
-                    (height/2).toFloat() + (textSize / 2), paint)
+                canvas.drawText(
+                    loadingText, (width / 2).toFloat(),
+                    (height / 2).toFloat() + (textSize / 2), paint
+                )
 
                 // Loading circle
                 paint.color = highlightColor
-                canvas.drawArc((width * 3/4) - circleRadius,
+                canvas.drawArc(
+                    (width * 3 / 4) - circleRadius,
                     (height / 2) - circleRadius,
-                    (width * 3/4) + circleRadius,
+                    (width * 3 / 4) + circleRadius,
                     (height / 2) + circleRadius,
-                    0F, loadingAngle, true, paint)
+                    0F, loadingAngle, true, paint
+                )
             }
             else -> {
                 paint.color = baseColor
@@ -174,8 +178,10 @@ class LoadingButton @JvmOverloads constructor(
                     0F, 0F, width.toFloat(), height.toFloat(), paint
                 )
                 paint.color = textColor
-                canvas.drawText(baseText, (width / 2).toFloat(),
-                    (height / 2).toFloat() + (textSize / 2), paint)
+                canvas.drawText(
+                    baseText, (width / 2).toFloat(),
+                    (height / 2).toFloat() + (textSize / 2), paint
+                )
             }
         }
     }
