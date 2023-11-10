@@ -11,3 +11,14 @@ The project demonstrates the ability to exploit the components already seen in t
 The project consists of one main screen, the one displaying the downloading process, and a second screen that is opened when clicking the notification.
 
 Visit the [Wiki]() to see the application screens.
+
+
+## Getting Started
+To clone the repository, use the command
+```
+$ git clone https://github.com/PaoloCaldera/loadingStatus.git
+```
+or the `Get from VCS` option inside Android Studio by copying the link above.
+
+Then, run the application on an Android device or emulator. The application is compiled with API 33, thus use a device or emulator supporting such API version.
+For complete usage of the application, be sure that the device or emulator is connected to a Wi-Fi network.
