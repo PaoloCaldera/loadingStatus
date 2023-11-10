@@ -10,7 +10,7 @@ The project demonstrates the ability to exploit the components already seen in t
 
 The project consists of one main screen, the one displaying the downloading process, and a second screen that is opened when clicking the notification.
 
-Visit the [Wiki]() to see the application screens.
+Visit the [Wiki](https://github.com/PaoloCaldera/loadingStatus/wiki) to see the application screens.
 
 
 ## Getting Started
