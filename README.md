@@ -20,7 +20,7 @@ $ git clone https://github.com/PaoloCaldera/loadingStatus.git
 ```
 or the `Get from VCS` option inside Android Studio by copying the link above.
 
-Then, run the application on an Android device or emulator. The application is compiled with API 33, thus use a device or emulator supporting such API version.
+Then, run the application on an Android device or emulator. The application is compiled with API 30, thus use a device or emulator supporting such API version.
 For complete usage of the application, be sure that the device or emulator is connected to a Wi-Fi network.
 
 
